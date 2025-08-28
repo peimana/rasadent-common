@@ -3,7 +3,7 @@
 namespace Rasadent\Common\Notification\Enums;
 
 enum NotifiactionEventKey: string {
-    case OTP = 'otp';
+    case OTP = 'OTP';
     
     case ADMIN_NEW_CREDIT_REQUEST = 'ADMIN_NEW_CREDIT_REQUEST';
     case ADMIN_NEW_TICKET = 'ADMIN_NEW_TICKET';
