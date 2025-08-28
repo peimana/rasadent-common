@@ -1,0 +1,14 @@
+{
+    "name": "rasadent/common",
+    "description": "Shared code, contracts, and enums for Rasadent WebServices.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rasadent\\Common\\": "src/"
+        }
+    }
+}
