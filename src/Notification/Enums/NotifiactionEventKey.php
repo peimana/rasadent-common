@@ -2,9 +2,10 @@
 
 namespace Rasadent\Common\Notification\Enums;
 
-enum NotifiactionEventKey: string {
+enum NotifiactionEventKey: string
+{
     case OTP = 'OTP';
-    
+
     case ADMIN_NEW_CREDIT_REQUEST = 'ADMIN_NEW_CREDIT_REQUEST';
     case ADMIN_NEW_TICKET = 'ADMIN_NEW_TICKET';
     case ADMIN_NEW_PRODUCT_REQUEST = 'ADMIN_NEW_PRODUCT_REQUEST';
@@ -12,6 +13,7 @@ enum NotifiactionEventKey: string {
     case ADMIN_NEW_INVOICE = 'ADMIN_NEW_INVOICE';
     case ADMIN_PRODUCT_SENT_FROM_SHOP_TO_RASADENT = 'ADMIN_PRODUCT_SENT_FROM_SHOP_TO_RASADENT';
     case ADMIN_SHOP_REJECT_ORDER_ITEM = 'ADMIN_SHOP_REJECT_ORDER_ITEM';
+    case ADMIN_SHOP_ACCEPT_INVOICE = 'ADMIN_SHOP_ACCEPT_INVOICE';
 
     case SHOP_NEW_INVOICE = 'SHOP_NEW_INVOICE';
 
