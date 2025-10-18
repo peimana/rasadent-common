@@ -1,6 +1,6 @@
 <?php
 
-namespace Rasadent\Cart\Notification\Enums;
+namespace Rasadent\Common\Cart\Enums;
 
 enum CartDeliveryMethodEnum: string
 {
