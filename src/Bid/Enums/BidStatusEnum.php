@@ -9,4 +9,5 @@ enum BidStatusEnum: string
     case OPEN = 'open';
     case CLOSED = 'closed';
     case WON = 'won';
+    case REJECTED = 'rejected';
 }
