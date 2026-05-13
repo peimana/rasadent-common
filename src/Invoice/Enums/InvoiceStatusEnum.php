@@ -17,7 +17,7 @@ enum InvoiceStatusEnum: string
     /**
      * waiting for user to accept bids from vendors
      */
-    case JET_WAITING_FOR_USER_TO_SELECT_BIDS = 'JET_WAITING_FOR_USER_TO_SELECT_BIDS';
+    case JET_WAITING_FOR_USER_TO_ACCEPT_BIDS = 'JET_WAITING_FOR_USER_TO_ACCEPT_BIDS';
 
     /**
      * user has selected bids, the invoice items are created, now we are waiting for user to pay
