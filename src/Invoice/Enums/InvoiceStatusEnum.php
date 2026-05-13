@@ -5,15 +5,24 @@ namespace Rasadent\Common\Invoice\Enums;
 enum InvoiceStatusEnum: string
 {
     /**
-     * jet orders waiting for operator to create invoice items
+     * waiting for operator to create auctions based on jet
      */
-    case JET_WAITING_FOR_OPERATOR = 'J0';
-
+    case JET_WAITING_FOR_OPERATOR = 'JET_WAITING_FOR_OPERATOR';
 
     /**
-     * payment link sent to user and is waiting for payment
+     * waiting for any vendor to put price on bids created for the auctions in the jet
      */
-    case JET_PAYMENT_LINK_SENT_TO_USER = 'J1';
+    case JET_WAITING_FOR_ANY_VENDOR_TO_SETTLE_BID = 'JET_WAITING_FOR_ANY_VENDOR_TO_SETTLE_BID';
+
+    /**
+     * waiting for user to accept bids from vendors
+     */
+    case JET_WAITING_FOR_USER_TO_SELECT_BIDS = 'JET_WAITING_FOR_USER_TO_SELECT_BIDS';
+
+    /**
+     * user has selected bids, the invoice items are created, now we are waiting for user to pay
+     */
+    case JET_WAITING_FOR_PAYMENT = 'JET_WAITING_FOR_PAYMENT';
 
     /**
      * canceled invoice by user or admin
