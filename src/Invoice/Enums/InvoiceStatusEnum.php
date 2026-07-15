@@ -60,6 +60,11 @@ enum InvoiceStatusEnum: string
     case CONFIRMED = "3";
 
     /**
+     * Waiting for a courier to accept trip
+     */
+    case WAITING_FOR_COURIER = "WAITING_FOR_COURIER";
+
+    /**
      * When a order needs to change and add more products to it
      */
     case COLLECTING = "4";
