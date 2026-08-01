@@ -5,6 +5,11 @@ namespace Rasadent\Common\Invoice\Enums;
 enum InvoiceStatusEnum: string
 {
     /**
+     * invoices that has been passed a long time from their update time without being completed
+     */
+    case EXPIRED = "EXPIRED";
+    
+    /**
      * waiting for operator to create auctions based on jet
      */
     case JET_WAITING_FOR_OPERATOR = 'JET_WAITING_FOR_OPERATOR';
