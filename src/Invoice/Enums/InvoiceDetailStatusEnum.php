@@ -4,6 +4,11 @@ namespace Rasadent\Common\Invoice\Enums;
 
 enum InvoiceDetailStatusEnum: int
 {
+    /**
+     * no update in the last 7 days
+     */
+    case EXPIRED = -2;
+
     /*
     * When a shop rejects an item
     */
