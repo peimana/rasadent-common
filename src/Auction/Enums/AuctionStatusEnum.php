@@ -16,6 +16,11 @@ enum AuctionStatusEnum: string
     case CANCELED = 'canceled';
 
     /**
+     * User has selected all the bids and clicked on the proceed button. 
+     */
+    case WAITING_FOR_PAYMENT = 'waiting_for_payment';
+
+    /**
      * User accepted a bid from this auction
      */
     case DONE = 'done';
