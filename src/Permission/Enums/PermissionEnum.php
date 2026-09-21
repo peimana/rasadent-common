@@ -27,5 +27,6 @@ enum PermissionEnum: string
     case MANAGE_SETTINGS = 'MANAGE_SETTINGS';
     case MANAGE_NOTIFICATIONS = 'MANAGE_NOTIFICATIONS';
     case MANAGE_JET = 'MANAGE_JET';
+    case MANAGE_OTP = 'MANAGE_OTP';
     case SUPERADMIN = 'SUPERADMIN';
 }
