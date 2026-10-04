@@ -29,4 +29,9 @@ enum BidStatusEnum: string
      * User accepted this bid
      */
     case WON = 'won';
+
+    /**
+     * Bid has expired after 24 hours without getting finalized
+     */
+    case EXPIRED = 'expired';
 }
