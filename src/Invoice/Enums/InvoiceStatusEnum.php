@@ -5,93 +5,138 @@ namespace Rasadent\Common\Invoice\Enums;
 enum InvoiceStatusEnum: string
 {
     /**
-     * invoices that has been passed a long time from their update time without being completed
+     * Initial draft order or checkout stage
      */
-    case EXPIRED = "EXPIRED";
-    
-    /**
-     * waiting for operator to create auctions based on jet
-     */
-    case JET_WAITING_FOR_OPERATOR = 'JET_WAITING_FOR_OPERATOR';
+    case DRAFT = 'draft';
 
     /**
-     * waiting for any vendor to put price on bids created for the auctions in the jet
+     * Order confirmed, items being approved/gathered from vendors
      */
-    case JET_WAITING_FOR_ANY_VENDOR_TO_SETTLE_BID = 'JET_WAITING_FOR_ANY_VENDOR_TO_SETTLE_BID';
+    case PROCESSING = 'processing';
 
     /**
-     * waiting for user to accept bids from vendors
+     * Dispatched and in transit to customer
      */
-    case JET_WAITING_FOR_USER_TO_ACCEPT_BIDS = 'JET_WAITING_FOR_USER_TO_ACCEPT_BIDS';
+    case SHIPPED = 'shipped';
 
     /**
-     * user has selected bids, the invoice items are created, now we are waiting for user to pay
+     * Order fulfilled and delivered to customer
      */
-    case JET_WAITING_FOR_PAYMENT = 'JET_WAITING_FOR_PAYMENT';
+    case DELIVERED = 'delivered';
 
     /**
-     * canceled invoice by user or admin
+     * Order cancelled by customer or admin
      */
-    case CANCELED = "-3";
+    case CANCELLED = 'cancelled';
 
     /**
-     * Orders with a problem that need to be inspected by the admin
+     * Issue detected (e.g. vendor rejected item), requires admin inspection
      */
-    case PENDING = "-2";
+    case ON_HOLD = 'on_hold';
 
     /**
-     * Orders that has a failed payment
+     * Draft or unpaid order expired after timeout
      */
-    case FAILED = "-1";
+    case EXPIRED = 'expired';
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::DRAFT => 'پیش‌نویس',
+            self::PROCESSING => 'در حال پردازش',
+            self::SHIPPED => 'ارسال شده',
+            self::DELIVERED => 'تحویل داده شده',
+            self::CANCELLED => 'لغو شده',
+            self::ON_HOLD => 'نیازمند بررسی',
+            self::EXPIRED => 'منقضی شده',
+        };
+    }
+
+    public function isFinal(): bool
+    {
+        return in_array($this, [
+            self::DELIVERED,
+            self::CANCELLED,
+            self::EXPIRED,
+        ], true);
+    }
+
+    public function isActive(): bool
+    {
+        return in_array($this, [
+            self::PROCESSING,
+            self::SHIPPED,
+            self::ON_HOLD,
+        ], true);
+    }
+
+    public function canBeCancelled(): bool
+    {
+        return in_array($this, [
+            self::DRAFT,
+            self::PROCESSING,
+            self::ON_HOLD,
+        ], true);
+    }
 
     /**
-     * Just created order which has no status
+     * Map legacy status strings/ints to the new clean lifecycle status.
      */
-    case INITIALIZE = "0";
+    public static function fromLegacy(string|int $legacyStatus): self
+    {
+        return self::tryFromLegacy($legacyStatus)
+            ?? throw new \ValueError("Unknown legacy invoice status: '{$legacyStatus}'");
+    }
 
     /**
-     * For offline payment when user enters a tracking number, payment should be verified by admin
+     * Safely attempt to map a legacy status string/int to the new clean lifecycle status.
      */
-    case WAITING_PAYMENT = "1";
+    public static function tryFromLegacy(mixed $value): ?self
+    {
+        if ($value instanceof self) {
+            return $value;
+        }
 
-    /**
-     * After payment is verified by admin or automatically verified by gateway - It is waiting for shops to accept the order
-     */
-    case WAITING_SHOP = "2";
+        $stringVal = (string) $value;
 
-    /**
-     * After all shops approved the order items
-     */
-    case CONFIRMED = "3";
+        return match ($stringVal) {
+            // Modern values
+            'draft' => self::DRAFT,
+            'processing' => self::PROCESSING,
+            'shipped' => self::SHIPPED,
+            'delivered' => self::DELIVERED,
+            'cancelled' => self::CANCELLED,
+            'on_hold' => self::ON_HOLD,
+            'expired' => self::EXPIRED,
 
-    /**
-     * Waiting for a courier to accept trip
-     */
-    case WAITING_FOR_COURIER = "WAITING_FOR_COURIER";
+            // Legacy mappings:
+            // "0" = INITIALIZE, "1" = WAITING_PAYMENT, "7" = PRE_INVOICE, JET_*
+            '0', 'INITIALIZE', '1', 'WAITING_PAYMENT', '7', 'PRE_INVOICE',
+            'JET_WAITING_FOR_OPERATOR',
+            'JET_WAITING_FOR_ANY_VENDOR_TO_SETTLE_BID',
+            'JET_WAITING_FOR_USER_TO_ACCEPT_BIDS',
+            'JET_WAITING_FOR_PAYMENT',
+            'JET_PAYMENT_LINK_SENT_TO_USER' => self::DRAFT,
 
-    /**
-     * When a order needs to change and add more products to it
-     */
-    case COLLECTING = "4";
+            // "2" = WAITING_SHOP, "3" = CONFIRMED, "WAITING_FOR_COURIER", "4" = COLLECTING, "8" = READY_TO_SEND
+            '2', 'WAITING_SHOP', '3', 'CONFIRMED', 'WAITING_FOR_COURIER', '4', 'COLLECTING', '8', 'READY_TO_SEND' => self::PROCESSING,
 
-    /**
-     * When order is sent to the client
-     */
-    case SENDING = "5";
+            // "5" = SENDING
+            '5', 'SENDING' => self::SHIPPED,
 
-    /**
-     * Order is finished
-     */
-    case COMPLETED = "6";
+            // "6" = COMPLETED, "completed"
+            '6', 'COMPLETED', 'completed' => self::DELIVERED,
 
+            // "-3" = CANCELED, "-1" = FAILED
+            '-3', 'CANCELED', '-1', 'FAILED' => self::CANCELLED,
 
-    /**
-     * PreInvoice is created by the admin and now the inquiry department is checking the stocks
-     */
-    case PRE_INVOICE = "7";
+            // "-2" = PENDING
+            '-2', 'PENDING' => self::ON_HOLD,
 
-    /**
-     * After PreInvoice is created by the admin, And inquiry department has checked the stocks, the invoice is ready to be sent to the user
-     */
-    case READY_TO_SEND = "8";
+            // "EXPIRED"
+            'EXPIRED' => self::EXPIRED,
+
+            default => null,
+        };
+    }
 }
